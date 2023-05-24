@@ -50,6 +50,7 @@ func main() {
 	excelData.ARS = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.ARS)
 	excelData.CLP = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.CLP)
 	excelData.PEN = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.PEN)
+	excelData.COP = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.COP)
 	excelData.BOB = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BOB)
 
 	//TODO あとで削除

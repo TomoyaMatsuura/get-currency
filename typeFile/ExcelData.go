@@ -8,5 +8,6 @@ type ExcelData struct {
 	ARS  float64 //253.137514
 	CLP  float64 //863.035119
 	PEN  float64 //3.983791
+	COP  float64 //4780.290942
 	BOB  float64 //7.448222
 }
