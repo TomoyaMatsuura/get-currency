@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -23,7 +24,7 @@ type JsonType struct {
 	timestamp int    //1684897743
 	base      string //"EUR"
 	date      string //"2023-05-24"
-	Rates     Rates
+	Rates     Rates  //{"USD":1.078411,"JPY":149.318947,"BRL":5.362724,"MXN":19.361185,"ARS":253.343999,"CLP":863.806891,"PEN":3.987355,"BOB":7.454886}
 }
 
 func main() {
@@ -38,4 +39,12 @@ func main() {
 	fmt.Println(string(body))
 
 	fmt.Println(baseURL)
+
+	var currencyRate JsonType
+
+	if err := json.Unmarshal(body, &currencyRate); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%+v\n", currencyRate)
+
 }
