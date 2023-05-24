@@ -11,6 +11,10 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+func concertToUSD(usd float64, cur float64) float64 {
+	return cur / usd
+}
+
 func main() {
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,PEN,BOB"
 
@@ -36,6 +40,21 @@ func main() {
 	}
 	//TODO あとで削除
 	fmt.Printf("%+v\n", currencyRate)
+
+	//Excel出力用の構造体を作成
+	var excelData typeFile.ExcelData
+	excelData.Date = currencyRate.Date
+	excelData.JPY = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.JPY)
+	excelData.BRL = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BRL)
+	excelData.MXN = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.MXN)
+	excelData.ARS = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.ARS)
+	excelData.CLP = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.CLP)
+	excelData.PEN = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.PEN)
+	excelData.BOB = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BOB)
+
+	//TODO あとで削除
+	fmt.Printf("%+v", excelData)
+
 	//Excelファイル作成
 	file := excelize.NewFile()
 
