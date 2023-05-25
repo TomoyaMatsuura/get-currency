@@ -11,11 +11,13 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+//ドル換算を行う関数
 func concertToUSD(usd float64, cur float64) float64 {
 	return cur / usd
 }
 
 func main() {
+	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
 	//引数のURLにGETリクエスト
@@ -28,9 +30,8 @@ func main() {
 	//取得したURLの内容を読み込む
 	body, _ := io.ReadAll(res.Body)
 
-	var currencyRate typeFile.JsonType
-
 	//JSONのデータ(byte配列)を構造体に変換
+	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		fmt.Println(err)
 	}
