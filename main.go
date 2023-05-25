@@ -76,12 +76,13 @@ func main() {
 	file.SetCellValue(page, "B10", excelData.BOB)
 
 	//横幅を調整
-	file.SetColWidth(page, "A", "B", 16)
+	file.SetColWidth(page, "A", "B", 20)
 
 	//書式設定
 	styleID, err := file.NewStyle(&excelize.Style{
 		Alignment: &excelize.Alignment{Horizontal: "left"},
 		NumFmt:    2,
+		Font:      &excelize.Font{Size: 11, Family: "Arial"},
 	})
 	if err != nil {
 		fmt.Println(err)
