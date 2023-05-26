@@ -2,14 +2,22 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"get-currency/typeFile"
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/xuri/excelize/v2"
 )
+
+// ログ出力
+func loggingSettings(filename string) {
+	logFile, _ := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	multiLogFile := io.MultiWriter(os.Stdout, logFile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetOutput(multiLogFile)
+}
 
 //ドル換算を行う関数
 func concertToUSD(usd float64, cur float64) float64 {
@@ -17,6 +25,8 @@ func concertToUSD(usd float64, cur float64) float64 {
 }
 
 func main() {
+	loggingSettings("test.log")
+	log.Println("start. --------------------- ")
 	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
@@ -24,6 +34,7 @@ func main() {
 	res, err := http.Get(baseURL)
 	if err != nil {
 		log.Fatal(err)
+		log.Println(err)
 	}
 	//Response Bodyはクローズする必要があるので、クローズ処理
 	defer res.Body.Close()
@@ -33,7 +44,7 @@ func main() {
 	//JSONのデータ(byte配列)を構造体に変換
 	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	//Excel出力用の構造体を作成
@@ -50,6 +61,11 @@ func main() {
 
 	//Excelファイル作成
 	file := excelize.NewFile()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	//シート名を月日にする
 	page := excelData.Date
@@ -85,13 +101,13 @@ func main() {
 		Font:      &excelize.Font{Size: 11, Family: "Arial"},
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	file.SetCellStyle(page, "A1", "B11", styleID)
 
 	//名前をつけて保存
 	if err := file.SaveAs("為替レート.xlsx"); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-
+	log.Println("complete. --------------------- ")
 }
