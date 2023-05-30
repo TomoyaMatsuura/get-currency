@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"get-currency/typeFile"
 	"io"
 	"log"
@@ -25,7 +26,7 @@ func concertToUSD(usd float64, cur float64) float64 {
 }
 
 func main() {
-	loggingSettings("test.log")
+	loggingSettings("ログ.log")
 	log.Println("start. --------------------- ")
 	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
@@ -45,6 +46,8 @@ func main() {
 	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		log.Println(err)
+		fmt.Println(err)
+		fmt.Println("もう一度実行してください")
 	}
 
 	//Excel出力用の構造体を作成
@@ -64,6 +67,8 @@ func main() {
 	defer func() {
 		if err := file.Close(); err != nil {
 			log.Println(err)
+			fmt.Println(err)
+			fmt.Println("もう一度実行してください")
 		}
 	}()
 
@@ -102,6 +107,8 @@ func main() {
 	})
 	if err != nil {
 		log.Println(err)
+		fmt.Println(err)
+		fmt.Println("もう一度実行してください")
 	}
 	file.SetCellStyle(page, "A1", "B11", styleID)
 
