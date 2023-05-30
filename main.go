@@ -33,9 +33,9 @@ func sleep(m int) {
 
 func main() {
 	loggingSettings("ログ.log")
-	log.Println("----- Start. -----")
+	log.Println("----- Start... -----")
 	//為替API
-	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
+	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
 	//引数のURLにGETリクエスト
 	res, err := http.Get(baseURL)
@@ -53,7 +53,7 @@ func main() {
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		log.Println(err)
 		fmt.Println(err)
-		fmt.Println("APIエラー。コマンドを閉じて、もう一度実行してください")
+		fmt.Println("JSON Error, please try again.")
 		sleep(3)
 		os.Exit(3)
 	}
@@ -128,7 +128,7 @@ func main() {
 		fmt.Println(err)
 		fmt.Println("もう一度実行してください")
 	}
-	fmt.Print("Please Press Enter!")
+	fmt.Println("Please Press Enter!")
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -136,8 +136,9 @@ func main() {
 		in := scanner.Text()
 		switch in {
 		case "":
-			log.Println("----- Complete. -----")
-			sleep(3)
+			log.Println("----- Completed!!! -----")
+			log.Println("If the file is empty, please try again. It may be the error of API...")
+			sleep(2)
 			goto L
 		default:
 			fmt.Println("Command Error")
