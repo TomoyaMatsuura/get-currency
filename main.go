@@ -47,8 +47,7 @@ func main() {
 	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		log.Println(err)
-		fmt.Println(err)
-		fmt.Println("もう一度実行してください")
+		log.Println("もう一度実行してください")
 	}
 
 	//Excel出力用の構造体を作成
@@ -68,8 +67,7 @@ func main() {
 	defer func() {
 		if err := file.Close(); err != nil {
 			log.Println(err)
-			fmt.Println(err)
-			fmt.Println("もう一度実行してください")
+			log.Println("もう一度実行してください")
 		}
 	}()
 
