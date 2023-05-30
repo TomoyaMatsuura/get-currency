@@ -27,10 +27,13 @@ func concertToUSD(usd float64, cur float64) float64 {
 	return cur / usd
 }
 
+func sleep(m int) {
+	time.Sleep(time.Duration(m) * time.Second)
+}
+
 func main() {
 	loggingSettings("ログ.log")
 	log.Println("----- Start. -----")
-	fmt.Println("----- Start. -----")
 	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
@@ -49,7 +52,10 @@ func main() {
 	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		log.Println(err)
-		log.Println("もう一度実行してください")
+		fmt.Println(err)
+		fmt.Println("APIエラー。コマンドを閉じて、もう一度実行してください")
+		sleep(3)
+		os.Exit(3)
 	}
 
 	//Excel出力用の構造体を作成
@@ -130,8 +136,8 @@ func main() {
 		in := scanner.Text()
 		switch in {
 		case "":
-			fmt.Println("----- Complete. -----")
 			log.Println("----- Complete. -----")
+			sleep(3)
 			goto L
 		default:
 			fmt.Println("Command Error")
