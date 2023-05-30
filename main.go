@@ -130,6 +130,7 @@ func main() {
 	}
 	fmt.Println("Please Press Enter!")
 	scanner := bufio.NewScanner(os.Stdin)
+	sleep(1)
 
 	for {
 		scanner.Scan()
@@ -138,7 +139,7 @@ func main() {
 		case "":
 			log.Println("----- Completed!!! -----")
 			log.Println("If the file is empty, please try again. It may be the error of API...")
-			sleep(2)
+			sleep(5)
 			goto L
 		default:
 			fmt.Println("Command Error")
