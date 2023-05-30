@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"get-currency/typeFile"
@@ -28,7 +29,8 @@ func concertToUSD(usd float64, cur float64) float64 {
 
 func main() {
 	loggingSettings("ログ.log")
-	log.Println("start. --------------------- ")
+	log.Println("----- Start. -----")
+	fmt.Println("----- Start. -----")
 	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=27ccb6a5175f81a9499b130075a951ad&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
@@ -67,7 +69,8 @@ func main() {
 	defer func() {
 		if err := file.Close(); err != nil {
 			log.Println(err)
-			log.Println("もう一度実行してください")
+			fmt.Println(err)
+			fmt.Println("もう一度実行してください")
 		}
 	}()
 
@@ -116,6 +119,24 @@ func main() {
 	formatTime := time.Format("20060102")
 	if err := file.SaveAs("為替レート" + formatTime + ".xlsx"); err != nil {
 		log.Println(err)
+		fmt.Println(err)
+		fmt.Println("もう一度実行してください")
 	}
-	log.Println("complete. --------------------- ")
+	fmt.Print("Please Press Enter!")
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for {
+		scanner.Scan()
+		in := scanner.Text()
+		switch in {
+		case "":
+			fmt.Println("----- Complete. -----")
+			log.Println("----- Complete. -----")
+			goto L
+		default:
+			fmt.Println("Command Error")
+			continue
+		}
+	}
+L:
 }
