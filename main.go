@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -113,7 +114,9 @@ func main() {
 	file.SetCellStyle(page, "A1", "B11", styleID)
 
 	//名前をつけて保存
-	if err := file.SaveAs("為替レート.xlsx"); err != nil {
+	time := time.Now()
+	formatTime := time.Format("20060102")
+	if err := file.SaveAs("為替レート" + formatTime + ".xlsx"); err != nil {
 		log.Println(err)
 	}
 	log.Println("complete. --------------------- ")
