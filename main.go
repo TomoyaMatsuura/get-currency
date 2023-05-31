@@ -10,6 +10,7 @@ import (
 	"os"
 	"time"
 
+	_ "github.com/mattn/go-ieproxy"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -37,6 +38,8 @@ func main() {
 	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
 	//引数のURLにGETリクエスト
+	os.Setenv("HTTP_PROXY", "")
+	os.Setenv("HTTPS_PROXY", "")
 	res, err := http.Get(baseURL)
 	if err != nil {
 		log.Fatal(err)
