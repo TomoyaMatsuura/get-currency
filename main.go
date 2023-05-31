@@ -37,9 +37,10 @@ func main() {
 	//為替API
 	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
+	//プロキシ設定(InternetOptionから確認可能)
+	os.Setenv("HTTP_PROXY", "http://w055185.mj.makita.local:8080")
+	os.Setenv("HTTPS_PROXY", "http://w055185.mj.makita.local:8080")
 	//引数のURLにGETリクエスト
-	os.Setenv("HTTP_PROXY", "")
-	os.Setenv("HTTPS_PROXY", "")
 	res, err := http.Get(baseURL)
 	if err != nil {
 		log.Fatal(err)
