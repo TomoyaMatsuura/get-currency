@@ -22,7 +22,7 @@ func loggingSettings(filename string) {
 	log.SetOutput(multiLogFile)
 }
 
-//ドル換算を行う関数
+// ドル換算を行う関数
 func concertToUSD(usd float64, cur float64) float64 {
 	return cur / usd
 }
@@ -49,15 +49,17 @@ func main() {
 	//Response Bodyはクローズする必要があるので、クローズ処理
 	defer res.Body.Close()
 	//取得したURLの内容を読み込む
-	body, _ := io.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Println(err)
+	}
 
 	//JSONのデータ(byte配列)を構造体に変換
 	var currencyRate typeFile.JsonType
 	if err := json.Unmarshal(body, &currencyRate); err != nil {
 		log.Println(err)
-		fmt.Println(err)
-		fmt.Println("JSON Error, please try again.")
-		sleep(3)
+		fmt.Println("API Error, please try again.")
+		sleep(2)
 		os.Exit(3)
 	}
 
