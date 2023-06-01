@@ -38,11 +38,11 @@ func main() {
 	log.Println("----- Start... -----")
 
 	//為替APIのURL fixerのAPI(free plan)を使用 ※月に100回まで呼び出し可能
-	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
+	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,CAD,AUD,NZD,BRL,MXN,ARS,CLP,COP,PEN,BOB,INR,TRY,RUB,GBP,EUR,MAD"
 
 	//プロキシ設定(Internet Optionから確認可能)
-	os.Setenv("HTTP_PROXY", "http://w055185.mj.makita.local:8080")
-	os.Setenv("HTTPS_PROXY", "http://w055185.mj.makita.local:8080")
+	//os.Setenv("HTTP_PROXY", "http://w055185.mj.makita.local:8080")
+	//os.Setenv("HTTPS_PROXY", "http://w055185.mj.makita.local:8080")
 
 	//引数のURLにGETメソッドでのHTTPリクエスト
 	res, err := http.Get(baseURL)
@@ -72,6 +72,9 @@ func main() {
 	//APIから取得した値をドル換算
 	excelData.Date = currencyRate.Date
 	excelData.JPY = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.JPY)
+	excelData.CAD = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.CAD)
+	excelData.AUD = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.AUD)
+	excelData.NZD = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.NZD)
 	excelData.BRL = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BRL)
 	excelData.MXN = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.MXN)
 	excelData.ARS = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.ARS)
@@ -79,6 +82,12 @@ func main() {
 	excelData.PEN = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.PEN)
 	excelData.COP = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.COP)
 	excelData.BOB = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BOB)
+	excelData.INR = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.INR)
+	excelData.TRY = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.TRY)
+	excelData.RUB = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.RUB)
+	excelData.GBP = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.GBP)
+	excelData.EUR = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.EUR)
+	excelData.MAD = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.MAD)
 
 	//Excelファイル作成
 	file := excelize.NewFile()
@@ -94,28 +103,54 @@ func main() {
 	page := excelData.Date
 	file.SetSheetName("Sheet1", page)
 
+	//aColumn := [19]string{"取得日","","日本円","カナダドル","オーストラリアドル","ニュージーランドドル","ブラジルレアル","メキシコペソ","アルゼンチンペソ","チリペソ","ペルーソル","コロンビアペソ","ボリビアーノ","インドルピー(参考)","トルコリラ(参考)","ロシアルーブル","英国ポンド(参考)","ユーロ","モロッコディルハム"}
+	//bColumn := [19]string{}
+
 	//セルに記述
+	for i := 1; i <= 17; i++ {
+		file.SetCellValue(page, "A", "")
+		file.SetCellValue(page, "B", "")
+	}
 	file.SetCellValue(page, "A1", "取得日")
 	file.SetCellValue(page, "B1", excelData.Date)
 	file.SetCellValue(page, "A3", "日本円")
 	file.SetCellValue(page, "B3", excelData.JPY)
-	file.SetCellValue(page, "A4", "ブラジルレアル")
-	file.SetCellValue(page, "B4", excelData.BRL)
-	file.SetCellValue(page, "A5", "メキシコペソ")
-	file.SetCellValue(page, "B5", excelData.MXN)
-	file.SetCellValue(page, "A6", "アルゼンチンペソ")
-	file.SetCellValue(page, "B6", excelData.ARS)
-	file.SetCellValue(page, "A7", "チリペソ")
-	file.SetCellValue(page, "B7", excelData.CLP)
-	file.SetCellValue(page, "A8", "ペルーソル")
-	file.SetCellValue(page, "B8", excelData.PEN)
-	file.SetCellValue(page, "A9", "コロンビアペソ")
-	file.SetCellValue(page, "B9", excelData.COP)
-	file.SetCellValue(page, "A10", "ボリビアーノ")
-	file.SetCellValue(page, "B10", excelData.BOB)
+	file.SetCellValue(page, "A4", "カナダドル")
+	file.SetCellValue(page, "B4", excelData.CAD)
+	file.SetCellValue(page, "A5", "オーストラリアドル")
+	file.SetCellValue(page, "B5", excelData.AUD)
+	file.SetCellValue(page, "A6", "ニュージーランドドル")
+	file.SetCellValue(page, "B6", excelData.NZD)
+	file.SetCellValue(page, "A7", "ブラジルレアル")
+	file.SetCellValue(page, "B7", excelData.BRL)
+	file.SetCellValue(page, "A8", "メキシコペソ")
+	file.SetCellValue(page, "B8", excelData.MXN)
+	file.SetCellValue(page, "A9", "アルゼンチンペソ")
+	file.SetCellValue(page, "B9", excelData.ARS)
+	file.SetCellValue(page, "A10", "チリペソ")
+	file.SetCellValue(page, "B10", excelData.CLP)
+	file.SetCellValue(page, "A11", "ペルーソル")
+	file.SetCellValue(page, "B11", excelData.PEN)
+	file.SetCellValue(page, "A12", "コロンビアペソ")
+	file.SetCellValue(page, "B12", excelData.COP)
+	file.SetCellValue(page, "A13", "ボリビアーノ")
+	file.SetCellValue(page, "B13", excelData.BOB)
+	file.SetCellValue(page, "A14", "インドルピー(参考)")
+	file.SetCellValue(page, "B14", excelData.INR)
+	file.SetCellValue(page, "A15", "トルコリラ(参考)")
+	file.SetCellValue(page, "B15", excelData.TRY)
+	file.SetCellValue(page, "A16", "ロシアルーブル")
+	file.SetCellValue(page, "B16", excelData.RUB)
+	file.SetCellValue(page, "A17", "英国ポンド(参考)")
+	file.SetCellValue(page, "B17", excelData.GBP)
+	file.SetCellValue(page, "A18", "ユーロ")
+	file.SetCellValue(page, "B18", excelData.EUR)
+	file.SetCellValue(page, "A19", "モロッコディルハム")
+	file.SetCellValue(page, "B19", excelData.MAD)
 
 	//横幅を調整
-	file.SetColWidth(page, "A", "B", 20)
+	file.SetColWidth(page, "A", "A", 25)
+	file.SetColWidth(page, "B", "B", 20)
 
 	//書式設定
 	styleID, err := file.NewStyle(&excelize.Style{
@@ -128,7 +163,7 @@ func main() {
 		fmt.Println(err)
 		fmt.Println("もう一度実行してください")
 	}
-	file.SetCellStyle(page, "A1", "B11", styleID)
+	file.SetCellStyle(page, "A1", "B19", styleID)
 
 	//名前をつけて保存
 	time := time.Now()
