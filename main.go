@@ -14,7 +14,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-// ログ出力
+// ログ出力を行う関数
 func loggingSettings(filename string) {
 	logFile, _ := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	multiLogFile := io.MultiWriter(os.Stdout, logFile)
@@ -22,25 +22,29 @@ func loggingSettings(filename string) {
 	log.SetOutput(multiLogFile)
 }
 
-// ドル換算を行う関数
-func concertToUSD(usd float64, cur float64) float64 {
+// ドル換算を行う関数(APIフリープランでは基軸通貨がEURなのでドルに直す必要あり…)
+func convertToUSD(usd float64, cur float64) float64 {
 	return cur / usd
 }
 
+// m秒待機する関数
 func sleep(m int) {
 	time.Sleep(time.Duration(m) * time.Second)
 }
 
 func main() {
+	//ログファイルを作成
 	loggingSettings("ログ.log")
 	log.Println("----- Start... -----")
-	//為替API
+
+	//為替APIのURL fixerのAPI(free plan)を使用 ※月に100回まで呼び出し可能
 	baseURL := "http://data.fixer.io/api/latest?access_key=5eaa513290dc99010a8d2dff7ced9c18&symbols=USD,JPY,BRL,MXN,ARS,CLP,COP,PEN,BOB"
 
-	//プロキシ設定(InternetOptionから確認可能)
+	//プロキシ設定(Internet Optionから確認可能)
 	os.Setenv("HTTP_PROXY", "http://w055185.mj.makita.local:8080")
 	os.Setenv("HTTPS_PROXY", "http://w055185.mj.makita.local:8080")
-	//引数のURLにGETリクエスト
+
+	//引数のURLにGETメソッドでのHTTPリクエスト
 	res, err := http.Get(baseURL)
 	if err != nil {
 		log.Fatal(err)
@@ -65,15 +69,16 @@ func main() {
 
 	//Excel出力用の構造体を作成
 	var excelData typeFile.ExcelData
+	//APIから取得した値をドル換算
 	excelData.Date = currencyRate.Date
-	excelData.JPY = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.JPY)
-	excelData.BRL = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BRL)
-	excelData.MXN = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.MXN)
-	excelData.ARS = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.ARS)
-	excelData.CLP = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.CLP)
-	excelData.PEN = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.PEN)
-	excelData.COP = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.COP)
-	excelData.BOB = concertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BOB)
+	excelData.JPY = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.JPY)
+	excelData.BRL = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BRL)
+	excelData.MXN = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.MXN)
+	excelData.ARS = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.ARS)
+	excelData.CLP = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.CLP)
+	excelData.PEN = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.PEN)
+	excelData.COP = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.COP)
+	excelData.BOB = convertToUSD(currencyRate.Rates.USD, currencyRate.Rates.BOB)
 
 	//Excelファイル作成
 	file := excelize.NewFile()
