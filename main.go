@@ -18,7 +18,7 @@ import (
 func loggingSettings(filename string) {
 	logFile, _ := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	multiLogFile := io.MultiWriter(os.Stdout, logFile)
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetFlags(log.Ldate | log.Ltime)
 	log.SetOutput(multiLogFile)
 }
 
@@ -105,12 +105,12 @@ func main() {
 
 	//aColumn := [19]string{"取得日","","日本円","カナダドル","オーストラリアドル","ニュージーランドドル","ブラジルレアル","メキシコペソ","アルゼンチンペソ","チリペソ","ペルーソル","コロンビアペソ","ボリビアーノ","インドルピー(参考)","トルコリラ(参考)","ロシアルーブル","英国ポンド(参考)","ユーロ","モロッコディルハム"}
 	//bColumn := [19]string{}
+    // for i := 1; i <= 17; i++ {
+	// 	file.SetCellValue(page, "A", "")
+	// 	file.SetCellValue(page, "B", "")
+	// }
 
 	//セルに記述
-	for i := 1; i <= 17; i++ {
-		file.SetCellValue(page, "A", "")
-		file.SetCellValue(page, "B", "")
-	}
 	file.SetCellValue(page, "A1", "取得日")
 	file.SetCellValue(page, "B1", excelData.Date)
 	file.SetCellValue(page, "A3", "日本円")
@@ -150,7 +150,7 @@ func main() {
 
 	//横幅を調整
 	file.SetColWidth(page, "A", "A", 25)
-	file.SetColWidth(page, "B", "B", 20)
+	file.SetColWidth(page, "B", "B", 12)
 
 	//書式設定
 	styleID, err := file.NewStyle(&excelize.Style{
